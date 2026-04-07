@@ -1,0 +1,725 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{max-width:860px;margin:0 auto;padding:1.5rem 1rem 3rem;font-family:var(--font-sans)}
+h2{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:.5rem}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
+p,li{font-size:13px;color:var(--color-text-secondary);line-height:1.7}
+.chip{display:inline-block;font-size:10px;font-weight:500;padding:2px 9px;border-radius:12px;text-transform:uppercase;letter-spacing:.05em}
+.sec{margin-bottom:2.5rem}
+.sec-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:.6rem}
+
+/* TABS */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:0}
+.tab{font-size:12px;font-weight:500;padding:7px 14px;border-radius:var(--border-radius-md) var(--border-radius-md) 0 0;cursor:pointer;color:var(--color-text-secondary);border:0.5px solid transparent;border-bottom:none;background:transparent;transition:.15s}
+.tab:hover{background:var(--color-background-secondary)}
+.tab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);color:var(--color-text-primary);margin-bottom:-0.5px;border-bottom:0.5px solid var(--color-background-primary)}
+.panel{display:none}.panel.active{display:block}
+
+/* FIELD */
+.field-wrap{background:#2d5a1b;border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.field-inner{background:#3a7a25;border:3px solid #fff;border-radius:4px;position:relative;height:200px}
+.yd-line{position:absolute;top:0;bottom:0;border-left:1px solid rgba(255,255,255,.3);display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:4px}
+.yd-num{color:rgba(255,255,255,.7);font-size:9px;font-weight:500;transform:translateX(-50%);font-family:var(--font-sans)}
+.endzone{position:absolute;top:0;bottom:0;width:40px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center}
+.endzone span{color:rgba(255,255,255,.6);font-size:8px;font-weight:500;writing-mode:vertical-rl;letter-spacing:.1em}
+.ball{position:absolute;width:14px;height:10px;background:#8B4513;border-radius:50%;border:1.5px solid #fff;cursor:pointer;transition:left .4s ease}
+.scrimmage{position:absolute;top:0;bottom:0;width:2px;background:#ffff00;opacity:.8}
+.first-down{position:absolute;top:0;bottom:0;width:2px;background:#ff6600;opacity:.8}
+.field-legend{display:flex;gap:12px;margin-top:.5rem;flex-wrap:wrap}
+.fl-item{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.7)}
+.fl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:1rem}
+.info-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem}
+.info-card .ic-val{font-size:22px;font-weight:500;margin-bottom:3px}
+.info-card .ic-lbl{font-size:11px;color:var(--color-text-secondary)}
+.info-card .ic-desc{font-size:11px;color:var(--color-text-tertiary);margin-top:4px;line-height:1.5}
+
+/* EQUATION BOXES */
+.eq-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.125rem 1.25rem;margin-bottom:1rem}
+.eq-box .eq-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
+.eq-box .eq-subtitle{font-size:11px;color:var(--color-text-secondary);margin-bottom:.75rem;font-style:italic}
+.eq-formula{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;margin-bottom:.75rem;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);line-height:1.8;border-left:3px solid #1D9E75}
+.eq-parts{display:flex;flex-direction:column;gap:5px}
+.eq-part{display:flex;gap:10px;align-items:flex-start}
+.eq-var{font-family:var(--font-mono);font-size:11px;font-weight:500;min-width:120px;color:var(--color-text-primary);flex-shrink:0}
+.eq-meaning{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.eq-example{background:#E1F5EE;border-radius:var(--border-radius-md);padding:.5rem .875rem;margin-top:.5rem}
+.eq-example .ee-label{font-size:10px;font-weight:500;color:#085041;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.eq-example .ee-text{font-size:11px;color:#0F6E56;line-height:1.6}
+
+/* INTERACTIVE EPA SLIDER */
+.slider-wrap{margin-bottom:1rem}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:.75rem}
+.slider-row label{font-size:12px;color:var(--color-text-secondary);min-width:130px}
+.slider-row input{flex:1}
+.slider-row .val{font-size:13px;font-weight:500;min-width:50px;color:var(--color-text-primary)}
+.epa-result{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem}
+.epa-result .er-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.epa-result .er-val{font-size:28px;font-weight:500}
+.epa-result .er-interp{font-size:12px;color:var(--color-text-secondary);margin-top:4px}
+
+/* ELO INTERACTIVE */
+.elo-teams{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
+.elo-team{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem}
+.elo-team label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
+.elo-team input{width:100%;font-size:16px;font-weight:500;background:transparent;border:none;outline:none;color:var(--color-text-primary);font-family:var(--font-sans)}
+.elo-output{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.elo-out-item .eoi-val{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.elo-out-item .eoi-lbl{font-size:10px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em}
+
+/* BRIER INTERACTIVE */
+.brier-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
+.brier-case{border-radius:var(--border-radius-md);padding:.75rem 1rem;border:0.5px solid var(--color-border-tertiary)}
+.brier-case .bc-who{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.brier-case .bc-pick{font-size:10px;color:var(--color-text-secondary);margin-bottom:.5rem}
+.brier-case .bc-score{font-size:20px;font-weight:500}
+.brier-case.good{background:#EAF3DE;border-color:#C0DD97}.brier-case.good .bc-score{color:#3B6D11}
+.brier-case.bad{background:#FCEBEB;border-color:#F7C1C1}.brier-case.bad .bc-score{color:#791F1F}
+.brier-case.ok{background:#FAEEDA;border-color:#FAC775}.brier-case.ok .bc-score{color:#633806}
+
+/* TEAMS */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.team-card{padding:8px;border-radius:var(--border-radius-md);text-align:center;font-size:10px;font-weight:500;cursor:default}
+.afc{background:#E6F1FB;color:#0C447C}
+.nfc{background:#FCEBEB;color:#791F1F}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;position:relative}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.tl-line{width:1px;background:var(--color-border-tertiary);margin-left:4px;margin-top:0;flex-shrink:0;min-height:28px}
+.tl-content{padding-bottom:16px}
+.tl-content .tc-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.tl-content .tc-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-top:2px}
+
+/* SEASON TIMELINE */
+.season-bar{display:flex;align-items:stretch;border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:.5rem;height:36px}
+.sb-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;text-align:center;line-height:1.2}
+
+@media(max-width:560px){
+  .team-grid{grid-template-columns:repeat(3,1fr)}
+  .brier-grid{grid-template-columns:1fr}
+  .elo-teams{grid-template-columns:1fr}
+  .elo-output{grid-template-columns:1fr}
+}
+</style>
+
+<div class="wrap">
+
+<div class="tabs">
+  <div class="tab active" onclick="show('nfl')">What is NFL?</div>
+  <div class="tab" onclick="show('epa')">EPA — Expected Points</div>
+  <div class="tab" onclick="show('elo')">ELO Ratings</div>
+  <div class="tab" onclick="show('mc')">Monte Carlo</div>
+  <div class="tab" onclick="show('brier')">Brier Score</div>
+  <div class="tab" onclick="show('project')">Our Project</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ PANEL: NFL -->
+<div class="panel active" id="panel-nfl">
+
+  <div class="sec">
+    <div class="sec-label">The sport</div>
+    <h2>What is the NFL?</h2>
+    <p style="margin-bottom:.75rem">The NFL — National Football League — is America's premier professional American football league. 32 teams compete each season (September to February) for the <strong style="font-weight:500">Super Bowl</strong>, the championship trophy.</p>
+    <div class="card-grid">
+      <div class="info-card"><div class="ic-val" style="color:#1D9E75">32</div><div class="ic-lbl">Teams</div><div class="ic-desc">Split into AFC and NFC conferences, 4 divisions each</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#378ADD">17</div><div class="ic-lbl">Regular season games</div><div class="ic-desc">Each team plays 17 games over 18 weeks</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#7F77DD">14</div><div class="ic-lbl">Playoff teams</div><div class="ic-desc">Top 7 from AFC and top 7 from NFC qualify</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#EF9F27">1</div><div class="ic-lbl">Super Bowl</div><div class="ic-desc">AFC champion vs NFC champion in February</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">The field</div>
+    <h2 style="margin-bottom:.75rem">How the field works</h2>
+    <div class="field-wrap">
+      <div class="field-inner" id="field">
+        <div class="endzone" style="left:0"><span>END ZONE</span></div>
+        <div class="endzone" style="right:0"><span>END ZONE</span></div>
+        <div class="yd-line" style="left:9.1%"><div class="yd-num">10</div></div>
+        <div class="yd-line" style="left:18.2%"><div class="yd-num">20</div></div>
+        <div class="yd-line" style="left:27.3%"><div class="yd-num">30</div></div>
+        <div class="yd-line" style="left:36.4%"><div class="yd-num">40</div></div>
+        <div class="yd-line" style="left:45.5%"><div class="yd-num">50</div></div>
+        <div class="yd-line" style="left:54.6%"><div class="yd-num">40</div></div>
+        <div class="yd-line" style="left:63.7%"><div class="yd-num">30</div></div>
+        <div class="yd-line" style="left:72.8%"><div class="yd-num">20</div></div>
+        <div class="yd-line" style="left:81.9%"><div class="yd-num">10</div></div>
+        <div class="scrimmage" style="left:27%" id="scrimmage"></div>
+        <div class="first-down" style="left:36.4%" id="firstdown"></div>
+        <div class="ball" style="left:calc(27% - 7px);top:45%" id="ball"></div>
+      </div>
+      <div class="field-legend">
+        <div class="fl-item"><div class="fl-dot" style="background:#ffff00"></div>Line of scrimmage (where play starts)</div>
+        <div class="fl-item"><div class="fl-dot" style="background:#ff6600"></div>First down marker (must reach in 4 downs)</div>
+        <div class="fl-item"><div class="fl-dot" style="background:#8B4513"></div>Ball position</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem">
+      <div class="info-card"><div class="ic-lbl" style="margin-bottom:4px">100-yard field</div><p>The playing area is 100 yards long. Each team tries to advance the ball into the opponent's end zone to score a <strong style="font-weight:500">touchdown (6 points)</strong>.</p></div>
+      <div class="info-card"><div class="ic-lbl" style="margin-bottom:4px">4 downs to gain 10 yards</div><p>A team has 4 attempts (downs) to advance 10 yards. If they succeed, they get 4 more downs. Fail and the other team gets the ball.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Scoring</div>
+    <div class="card-grid">
+      <div class="info-card"><div class="ic-val" style="color:#1D9E75">6</div><div class="ic-lbl">Touchdown</div><div class="ic-desc">Ball carried or caught in end zone. Most valuable score.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#378ADD">3</div><div class="ic-lbl">Field Goal</div><div class="ic-desc">Ball kicked through the upright posts. Used when far from end zone.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#7F77DD">1</div><div class="ic-lbl">Extra Point</div><div class="ic-desc">Kick after touchdown. Almost always successful.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#EF9F27">2</div><div class="ic-lbl">Two-Point Conv.</div><div class="ic-desc">Run or pass into end zone after TD instead of kicking.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Season structure</div>
+    <div class="season-bar">
+      <div class="sb-seg" style="flex:3;background:#E1F5EE;color:#085041">Pre-season<br><span style="font-size:9px">Aug</span></div>
+      <div class="sb-seg" style="flex:9;background:#E6F1FB;color:#0C447C">Regular Season (17 games)<br><span style="font-size:9px">Sep – Jan</span></div>
+      <div class="sb-seg" style="flex:3;background:#EEEDFE;color:#26215C">Playoffs<br><span style="font-size:9px">Jan</span></div>
+      <div class="sb-seg" style="flex:2;background:#FAEEDA;color:#412402">Super Bowl<br><span style="font-size:9px">Feb</span></div>
+    </div>
+    <p style="font-size:11px;color:var(--color-text-tertiary)">The best 7 teams per conference (14 total) advance to the playoffs. The Super Bowl winner is crowned NFL champion.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">The 32 teams — AFC (blue) vs NFC (red)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">AFC — American Football Conference</div>
+        <div class="team-grid">
+          <div class="team-card afc">BUF<div style="font-size:9px;font-weight:400">Buffalo</div></div>
+          <div class="team-card afc">MIA<div style="font-size:9px;font-weight:400">Miami</div></div>
+          <div class="team-card afc">NE<div style="font-size:9px;font-weight:400">New England</div></div>
+          <div class="team-card afc">NYJ<div style="font-size:9px;font-weight:400">NY Jets</div></div>
+          <div class="team-card afc">BAL<div style="font-size:9px;font-weight:400">Baltimore</div></div>
+          <div class="team-card afc">CIN<div style="font-size:9px;font-weight:400">Cincinnati</div></div>
+          <div class="team-card afc">CLE<div style="font-size:9px;font-weight:400">Cleveland</div></div>
+          <div class="team-card afc">PIT<div style="font-size:9px;font-weight:400">Pittsburgh</div></div>
+          <div class="team-card afc">HOU<div style="font-size:9px;font-weight:400">Houston</div></div>
+          <div class="team-card afc">IND<div style="font-size:9px;font-weight:400">Indianapolis</div></div>
+          <div class="team-card afc">JAX<div style="font-size:9px;font-weight:400">Jacksonville</div></div>
+          <div class="team-card afc">TEN<div style="font-size:9px;font-weight:400">Tennessee</div></div>
+          <div class="team-card afc">DEN<div style="font-size:9px;font-weight:400">Denver</div></div>
+          <div class="team-card afc">KC<div style="font-size:9px;font-weight:400">Kansas City</div></div>
+          <div class="team-card afc">LV<div style="font-size:9px;font-weight:400">Las Vegas</div></div>
+          <div class="team-card afc">LAC<div style="font-size:9px;font-weight:400">LA Chargers</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">NFC — National Football Conference</div>
+        <div class="team-grid">
+          <div class="team-card nfc">DAL<div style="font-size:9px;font-weight:400">Dallas</div></div>
+          <div class="team-card nfc">NYG<div style="font-size:9px;font-weight:400">NY Giants</div></div>
+          <div class="team-card nfc">PHI<div style="font-size:9px;font-weight:400">Philadelphia</div></div>
+          <div class="team-card nfc">WAS<div style="font-size:9px;font-weight:400">Washington</div></div>
+          <div class="team-card nfc">CHI<div style="font-size:9px;font-weight:400">Chicago</div></div>
+          <div class="team-card nfc">DET<div style="font-size:9px;font-weight:400">Detroit</div></div>
+          <div class="team-card nfc">GB<div style="font-size:9px;font-weight:400">Green Bay</div></div>
+          <div class="team-card nfc">MIN<div style="font-size:9px;font-weight:400">Minnesota</div></div>
+          <div class="team-card nfc">ATL<div style="font-size:9px;font-weight:400">Atlanta</div></div>
+          <div class="team-card nfc">CAR<div style="font-size:9px;font-weight:400">Carolina</div></div>
+          <div class="team-card nfc">NO<div style="font-size:9px;font-weight:400">New Orleans</div></div>
+          <div class="team-card nfc">TB<div style="font-size:9px;font-weight:400">Tampa Bay</div></div>
+          <div class="team-card nfc">ARI<div style="font-size:9px;font-weight:400">Arizona</div></div>
+          <div class="team-card nfc">LAR<div style="font-size:9px;font-weight:400">LA Rams</div></div>
+          <div class="team-card nfc">SEA<div style="font-size:9px;font-weight:400">Seattle ✓</div></div>
+          <div class="team-card nfc">SF<div style="font-size:9px;font-weight:400">San Francisco</div></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:.5rem">SEA = Seattle Seahawks — our model's #1 pick, winner of Super Bowl LX (2025 season)</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ PANEL: EPA -->
+<div class="panel" id="panel-epa">
+
+  <div class="sec">
+    <h2>EPA — Expected Points Added</h2>
+    <p style="margin-bottom:1rem">Before every play, based on the <strong style="font-weight:500">down, yards to go, and field position</strong>, statisticians have calculated the average number of points a team is expected to score from that situation. EPA measures how much a play changed that expectation.</p>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">The EPA equation</div>
+    <div class="eq-subtitle">Applied to every single play in the game</div>
+    <div class="eq-formula">EPA = EP_after − EP_before
+
+where:
+  EP_before  = expected points BEFORE this play
+  EP_after   = expected points AFTER this play</div>
+    <div class="eq-parts">
+      <div class="eq-part"><div class="eq-var">EP_before</div><div class="eq-meaning">On 1st & 10 from your own 30-yard line, the historical average is about 1.3 points scored in the drive. So EP_before = 1.3</div></div>
+      <div class="eq-part"><div class="eq-var">EP_after</div><div class="eq-meaning">If the play gains 20 yards, now it's 1st & 10 from the opponent's 50. Historical average there is about 2.8 points. EP_after = 2.8</div></div>
+      <div class="eq-part"><div class="eq-var">EPA result</div><div class="eq-meaning">2.8 − 1.3 = +1.5 EPA. The play added 1.5 expected points. It was a good play.</div></div>
+    </div>
+    <div class="eq-example">
+      <div class="ee-label">Intuition</div>
+      <div class="ee-text">Think of EP as the "stock price" of your possession. A big gain = stock goes up = positive EPA. A sack = stock goes down = negative EPA. An interception = stock crashes to ~−4 EPA because you gave the ball away.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Play-by-play examples</div>
+    <div class="card-grid">
+      <div class="info-card"><div class="ic-val" style="color:#3B6D11">+3.5</div><div class="ic-lbl">Touchdown pass</div><div class="ic-desc">Ball thrown into end zone. Massive positive EPA — changes everything.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#3B6D11">+1.8</div><div class="ic-lbl">40-yard completion</div><div class="ic-desc">3rd & 8, gains the first down. Moves into field goal range.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#888">+0.1</div><div class="ic-lbl">3-yard run</div><div class="ic-desc">1st & 10, gains 3. Small positive — made some progress.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#A32D2D">−1.2</div><div class="ic-lbl">Sack</div><div class="ic-desc">QB tackled behind line. Loses yards and burns a down. Very costly.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#A32D2D">−4.0</div><div class="ic-lbl">Interception</div><div class="ic-desc">Ball stolen by defense. Opponent now has possession. Catastrophic.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#A32D2D">−3.5</div><div class="ic-lbl">Fumble lost</div><div class="ic-desc">Ball dropped and recovered by opponent. Similarly devastating.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Why we use EPA instead of points scored</div>
+    <div class="eq-box" style="margin-bottom:1rem">
+      <div class="eq-title">Rolling EPA — our main feature</div>
+      <div class="eq-subtitle">We take the average EPA per play over the last 4 weeks</div>
+      <div class="eq-formula">roll_off_epa(team, week) = mean(EPA per play, weeks N-4 to N-1)
+
+shift(1) rule: week N cannot use week N's own data
+               → strictly uses weeks N-4 through N-1 only</div>
+      <div class="eq-parts">
+        <div class="eq-part"><div class="eq-var">Positive value</div><div class="eq-meaning">Team is currently playing well offensively. Their plays are regularly exceeding expectations.</div></div>
+        <div class="eq-part"><div class="eq-var">Near zero</div><div class="eq-meaning">Team is average — plays are meeting expectations but not exceeding them.</div></div>
+        <div class="eq-part"><div class="eq-var">Negative value</div><div class="eq-meaning">Team is struggling. Their plays are regularly underperforming expectations — a sign of poor form.</div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="info-card"><div class="ic-lbl" style="margin-bottom:4px">Problem with points scored</div><p>A team can score 35 points against a terrible defense, or score 17 against a great defense. Points don't tell you how well the team actually played.</p></div>
+      <div class="info-card"><div class="ic-lbl" style="margin-bottom:4px">Why EPA is better</div><p>EPA per play removes the opponent effect. A +0.15 EPA per play means the team consistently gains more than expected regardless of who they face.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Try it — EPA calculator</div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <label>EP before play</label>
+        <input type="range" min="-4" max="6" step="0.1" value="1.3" id="ep-before" oninput="calcEPA()">
+        <span class="val" id="ep-before-val">1.3</span>
+      </div>
+      <div class="slider-row">
+        <label>EP after play</label>
+        <input type="range" min="-4" max="7" step="0.1" value="2.8" id="ep-after" oninput="calcEPA()">
+        <span class="val" id="ep-after-val">2.8</span>
+      </div>
+    </div>
+    <div class="epa-result">
+      <div class="er-label">EPA = EP_after − EP_before</div>
+      <div class="er-val" id="epa-result" style="color:#3B6D11">+1.5</div>
+      <div class="er-interp" id="epa-interp">Good play — gained about 1.5 expected points</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ PANEL: ELO -->
+<div class="panel" id="panel-elo">
+
+  <div class="sec">
+    <h2>ELO Ratings</h2>
+    <p style="margin-bottom:1rem">ELO is a system originally designed for chess. Every team gets a rating number. Win against a strong team → rating goes up a lot. Lose to a weak team → rating drops a lot. The rating captures years of accumulated team quality in one number.</p>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">ELO win probability equation</div>
+    <div class="eq-subtitle">Before any game, we can calculate the expected win probability</div>
+    <div class="eq-formula">P(home wins) = 1 / (1 + 10^((R_away − R_home − H) / 400))
+
+where:
+  R_home  = home team's current ELO rating
+  R_away  = away team's current ELO rating
+  H       = home field advantage = +65 ELO points
+  400     = scaling constant (from original chess formula)</div>
+    <div class="eq-parts">
+      <div class="eq-part"><div class="eq-var">R_home − R_away</div><div class="eq-meaning">The rating gap. A 100-point gap means the stronger team wins ~64% of the time. A 200-point gap means ~76%.</div></div>
+      <div class="eq-part"><div class="eq-var">+65 (home advantage)</div><div class="eq-meaning">Home teams win ~57% of NFL games. Adding 65 ELO points to the home team's effective rating captures this empirically.</div></div>
+      <div class="eq-part"><div class="eq-var">10^(x/400)</div><div class="eq-meaning">The logistic curve. Ensures probability stays between 0% and 100% no matter how large the gap is.</div></div>
+    </div>
+    <div class="eq-example">
+      <div class="ee-label">Example</div>
+      <div class="ee-text">KC (ELO 1620) hosts BAL (ELO 1580) at home. Gap = 1620 − 1580 + 65 = 105. P(KC wins) = 1 / (1 + 10^(−105/400)) = 1 / (1 + 0.543) = 64.8%</div>
+    </div>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">ELO update equation</div>
+    <div class="eq-subtitle">After every game, both teams' ratings update based on the result</div>
+    <div class="eq-formula">R_new = R_old + K × (S − P_expected)
+
+where:
+  K          = 22  (how fast ratings change — the K-factor)
+  S          = actual result  (1 = win, 0 = loss)
+  P_expected = predicted win probability (from equation above)</div>
+    <div class="eq-parts">
+      <div class="eq-part"><div class="eq-var">S − P_expected</div><div class="eq-meaning">The surprise factor. If KC was expected to win 80% and did win, the surprise is only 0.20 — small rating gain. If KC was expected to win 80% and lost, surprise = −0.80 — large rating drop.</div></div>
+      <div class="eq-part"><div class="eq-var">K = 22</div><div class="eq-meaning">NFL K-factor is higher than chess (6-10) because teams only play 17 games per year, so each game carries more information about real team quality.</div></div>
+      <div class="eq-part"><div class="eq-var">Season regression</div><div class="eq-meaning">Each offseason: R_new = 1500 + 0.67 × (R_old − 1500). Moves 33% back toward 1500 to account for roster changes.</div></div>
+    </div>
+    <div class="eq-example">
+      <div class="ee-label">Example</div>
+      <div class="ee-text">KC (ELO 1620) beats BAL. Expected win = 64.8%, actual = 1 (win). Update = 22 × (1 − 0.648) = +7.7. KC new ELO = 1627.7. BAL loses −7.7 points → 1572.3</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Try it — ELO calculator</div>
+    <div class="elo-teams">
+      <div class="elo-team">
+        <label>Home team ELO rating</label>
+        <input type="number" id="elo-home" value="1620" min="1000" max="2000" oninput="calcELO()">
+      </div>
+      <div class="elo-team">
+        <label>Away team ELO rating</label>
+        <input type="number" id="elo-away" value="1580" min="1000" max="2000" oninput="calcELO()">
+      </div>
+    </div>
+    <div class="elo-output">
+      <div class="elo-out-item"><div class="eoi-val" id="elo-gap">105</div><div class="eoi-lbl">ELO gap (with home adv.)</div></div>
+      <div class="elo-out-item"><div class="eoi-val" id="elo-prob-home" style="color:#3B6D11">64.8%</div><div class="eoi-lbl">Home win probability</div></div>
+      <div class="elo-out-item"><div class="eoi-val" id="elo-prob-away" style="color:#A32D2D">35.2%</div><div class="eoi-lbl">Away win probability</div></div>
+    </div>
+    <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:.5rem">Average NFL team ELO = 1500. Elite teams reach ~1650. Strong contenders ~1580-1620.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Our 2025 ELO top 5 — end of season</div>
+    <div class="card-grid">
+      <div class="info-card"><div class="ic-val" style="color:#1D9E75">#1 SEA</div><div class="ic-lbl">1643</div><div class="ic-desc">Seattle Seahawks — our model's pick. Won Super Bowl LX.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#378ADD">#2 BUF</div><div class="ic-lbl">1606</div><div class="ic-desc">Buffalo Bills — strong AFC contender all season.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#7F77DD">#3 DEN</div><div class="ic-lbl">1597</div><div class="ic-desc">Denver Broncos — resurgent season in AFC West.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#EF9F27">#4 PHI</div><div class="ic-lbl">1591</div><div class="ic-desc">Philadelphia Eagles — 2024 Super Bowl winners, still elite.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ PANEL: MONTE CARLO -->
+<div class="panel" id="panel-mc">
+
+  <div class="sec">
+    <h2>Monte Carlo Simulation</h2>
+    <p style="margin-bottom:.75rem">We know each team's probability of winning any single game. But to find the Super Bowl probability, we need to simulate the entire season + playoffs. Monte Carlo does this by repeating the full simulation 10,000 times and counting outcomes.</p>
+    <p>The name "Monte Carlo" comes from the famous casino in Monaco — because the method relies on randomness, just like gambling.</p>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">Win probability per game (the coin flip)</div>
+    <div class="eq-subtitle">For each remaining game, we blend three signals</div>
+    <div class="eq-formula">P(home wins) = 0.40 × P_elo  +  0.40 × P_epa  +  0.20 × P_to
+
+where:
+  P_elo  = win probability from ELO rating gap
+  P_epa  = win probability from rolling EPA differential
+  P_to   = win probability from turnover margin differential</div>
+    <div class="eq-parts">
+      <div class="eq-part"><div class="eq-var">P_elo (40%)</div><div class="eq-meaning">Historical team quality. Strong teams with high ELO deserve significant weight even if recent form is shaky.</div></div>
+      <div class="eq-part"><div class="eq-var">P_epa (40%)</div><div class="eq-meaning">Current form. A team playing great football right now — high recent EPA — should get equal weight to history.</div></div>
+      <div class="eq-part"><div class="eq-var">P_to (20%)</div><div class="eq-meaning">Turnover margin. Teams winning the turnover battle win ~80% of games. It gets its own weight because it is so predictive.</div></div>
+    </div>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">Super Bowl probability equation</div>
+    <div class="eq-formula">SB_prob(team) = (wins across 10,000 simulations) / 10,000 × 100%
+
+For each simulation:
+  1. Simulate all remaining regular season games using P(home wins)
+  2. Sort teams by wins → seed playoff bracket (7 per conference)
+  3. Simulate: Wild Card → Divisional → Conference Champ → Super Bowl
+  4. Record which team won the Super Bowl
+  5. Repeat from step 1</div>
+    <div class="eq-example">
+      <div class="ee-label">Real result — 2025 season</div>
+      <div class="ee-text">SEA won the Super Bowl in 4,231 out of 10,000 simulations? No — 1,970 out of 10,000, giving 19.7%. With 32 teams competing, 19.7% is enormous. Random would be 3.1%.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Why 10,000 simulations?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div class="info-card"><div class="ic-val" style="color:#A32D2D">100</div><div class="ic-lbl">simulations</div><div class="ic-desc">Too noisy. Results jump around by 5-10% just from randomness.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#EF9F27">1,000</div><div class="ic-lbl">simulations</div><div class="ic-desc">Better. Results stable to ~1%. Takes under 1 second.</div></div>
+      <div class="info-card"><div class="ic-val" style="color:#3B6D11">10,000</div><div class="ic-lbl">simulations</div><div class="ic-desc">Results stable to ~0.3%. Takes 4 seconds. Sweet spot chosen.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">2025 top 5 Super Bowl probabilities</div>
+    <div style="margin-top:.25rem">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;min-width:60px;color:var(--color-text-secondary)">#1 SEA</span>
+        <div style="flex:1;height:18px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:#1D9E75;border-radius:3px"></div></div>
+        <span style="font-size:12px;font-weight:500;min-width:40px;color:#1D9E75">19.7%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;min-width:60px;color:var(--color-text-secondary)">#2 BUF</span>
+        <div style="flex:1;height:18px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden"><div style="width:57%;height:100%;background:#378ADD;border-radius:3px"></div></div>
+        <span style="font-size:12px;font-weight:500;min-width:40px;color:#378ADD">11.2%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;min-width:60px;color:var(--color-text-secondary)">#3 NE</span>
+        <div style="flex:1;height:18px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden"><div style="width:51%;height:100%;background:#7F77DD;border-radius:3px"></div></div>
+        <span style="font-size:12px;font-weight:500;min-width:40px;color:#7F77DD">10.0%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;min-width:60px;color:var(--color-text-secondary)">#4 JAX</span>
+        <div style="flex:1;height:18px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden"><div style="width:41%;height:100%;background:#EF9F27;border-radius:3px"></div></div>
+        <span style="font-size:12px;font-weight:500;min-width:40px;color:#BA7517">8.0%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;min-width:60px;color:var(--color-text-secondary)">#5 PHI</span>
+        <div style="flex:1;height:18px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden"><div style="width:39%;height:100%;background:#E24B4A;border-radius:3px"></div></div>
+        <span style="font-size:12px;font-weight:500;min-width:40px;color:#A32D2D">7.7%</span>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:.5rem">All 32 SB probabilities sum to exactly 100%.</p>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ PANEL: BRIER -->
+<div class="panel" id="panel-brier">
+
+  <div class="sec">
+    <h2>Brier Score — measuring prediction quality</h2>
+    <p style="margin-bottom:.75rem">Accuracy (right/wrong) does not tell the full story. A model that says "99% chance KC wins" when they barely win is technically correct but dangerously overconfident. Brier Score measures how <em>calibrated</em> the probabilities are.</p>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">Brier Score equation</div>
+    <div class="eq-subtitle">Applied to each game prediction</div>
+    <div class="eq-formula">Brier = (predicted_probability − actual_outcome)²
+
+where:
+  predicted_probability  = model's win probability (0.0 to 1.0)
+  actual_outcome         = 1 if team won, 0 if team lost</div>
+    <div class="eq-parts">
+      <div class="eq-part"><div class="eq-var">Lower = better</div><div class="eq-meaning">A perfect model with probability 1.0 for every winner scores 0.0. Always predicting 50% gives 0.25 (the random baseline).</div></div>
+      <div class="eq-part"><div class="eq-var">The squaring</div><div class="eq-meaning">Squaring means overconfident wrong predictions are punished heavily. Predicting 95% and being wrong is much worse than predicting 60% and being wrong.</div></div>
+      <div class="eq-part"><div class="eq-var">Our model score</div><div class="eq-meaning">0.2127 on the 2024 holdout season — better than the random baseline (0.25) and better than the ELO-only baseline (0.228).</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Real 2025 Brier examples — SEA won Super Bowl LX</div>
+    <div class="brier-grid">
+      <div class="brier-case good">
+        <div class="bc-who">User Alice — very good</div>
+        <div class="bc-pick">Picked SEA at 80% confidence</div>
+        <div class="bc-score">(0.80 − 1)² = 0.04</div>
+        <p style="font-size:10px;margin-top:4px;color:#3B6D11">Confident AND correct. Near-perfect prediction.</p>
+      </div>
+      <div class="brier-case ok">
+        <div class="bc-who">User Bob — OK</div>
+        <div class="bc-pick">Picked SEA at 40% confidence</div>
+        <div class="bc-score">(0.40 − 1)² = 0.36</div>
+        <p style="font-size:10px;margin-top:4px;color:#633806">Right team, but not confident enough.</p>
+      </div>
+      <div class="brier-case bad">
+        <div class="bc-who">User Carol — worst</div>
+        <div class="bc-pick">Picked KC at 70% confidence</div>
+        <div class="bc-score">(0.70 − 0)² = 0.49</div>
+        <p style="font-size:10px;margin-top:4px;color:#791F1F">Wrong team AND overconfident. Harshly penalised.</p>
+      </div>
+      <div class="brier-case ok">
+        <div class="bc-who">User Dave — smart</div>
+        <div class="bc-pick">Picked KC at 30% confidence</div>
+        <div class="bc-score">(0.30 − 0)² = 0.09</div>
+        <p style="font-size:10px;margin-top:4px;color:#633806">Wrong team but honest about uncertainty. Beats Carol!</p>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:.5rem">Dave was wrong but scores better than Carol — because he was honest that he was uncertain. Brier Score rewards calibration over boldness.</p>
+  </div>
+
+  <div class="eq-box">
+    <div class="eq-title">AUC — Area Under the ROC Curve</div>
+    <div class="eq-subtitle">A second metric measuring discrimination power</div>
+    <div class="eq-formula">AUC = P(model scores winner higher than loser)
+
+Range:  0.5 = random (coin flip)
+        0.7 = good discrimination
+        0.8 = excellent
+        1.0 = perfect
+
+Our model: AUC = 0.735 (2024 holdout season)</div>
+    <div class="eq-parts">
+      <div class="eq-part"><div class="eq-var">Plain English</div><div class="eq-meaning">Pick any game the home team won and any game the away team won. AUC of 0.735 means our model correctly assigns the higher win probability to the actual winner 73.5% of the time.</div></div>
+      <div class="eq-part"><div class="eq-var">Why it matters</div><div class="eq-meaning">AUC works at every threshold simultaneously. It does not depend on choosing a cutoff like "predict win if probability > 50%". It measures pure ranking quality.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════ PANEL: PROJECT -->
+<div class="panel" id="panel-project">
+
+  <div class="sec">
+    <h2>What our project does — step by step</h2>
+    <p style="margin-bottom:1rem">We built an end-to-end system that takes raw NFL data and produces a probability for every team winning the Super Bowl. Here is how all the pieces connect.</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#1D9E75"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 1 — Load data from nflverse</div>
+          <div class="tc-desc">Download 373,381 plays, 60,788 injury records, 2,821 draft picks and 3,028 game results from the nflverse database. Cache as Parquet so it only downloads once.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#378ADD"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 2 — Fit ELO ratings</div>
+          <div class="tc-desc">Run through all games from 2015 to 2025. After each game, update both teams' ELO ratings using the update equation. By end of 2025: SEA = 1643 (highest), average = 1500.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#7F77DD"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 3 — Engineer 32 features per game</div>
+          <div class="tc-desc">For every game, compute: elo_diff, home_win_prob_elo, rolling 4-week EPA (off, def, pass, rush), rolling turnover margin, sack rate, 3rd down rate, injury impact scores, draft quality scores. All using shift(1) to prevent leakage.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#D4821A"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 4 — Train XGBoost on 2018-2023</div>
+          <div class="tc-desc">XGBoost learns from 2,227 games. Using TimeSeriesSplit CV (5 folds, always future-only test sets) to tune hyperparameters. Then apply isotonic calibration to make probabilities honest.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#E24B4A"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 5 — Evaluate on 2024 holdout</div>
+          <div class="tc-desc">Test on 285 games the model never saw. Result: 68.1% accuracy, Brier 0.2127, AUC 0.735. All three targets met. ELO baseline was 63% accuracy for comparison.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#1D9E75"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 6 — Run 10,000 Monte Carlo simulations</div>
+          <div class="tc-desc">Simulate the full 2025 season 10,000 times. Each simulation: coin flip every game → sort by wins → seed playoffs → Wild Card → Divisional → Conf Champ → Super Bowl. Count winners.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tl-dot" style="background:#7F77DD"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tc-title">Step 7 — Result: SEA ranked #1 at 19.7%</div>
+          <div class="tc-desc">Out of 10,000 simulations, SEA won the Super Bowl in ~1,970 of them. The Seahawks won Super Bowl LX in real life, defeating the New England Patriots 29-13 on February 8, 2026.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">All equations used in the project</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">ELO win probability</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">P = 1/(1+10^((Ra−Rh−65)/400))</div>
+        <div class="ic-desc">Converts rating gap into win probability. Used for every game prediction and Monte Carlo.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">ELO update</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">R_new = R_old + 22×(S − P)</div>
+        <div class="ic-desc">Updates ratings after each game. K=22 for NFL. S=1 for win, 0 for loss.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">Rolling EPA</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">mean(EPA, weeks N-4 to N-1)</div>
+        <div class="ic-desc">4-week rolling average of EPA per play. shift(1) ensures no leakage from current week.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">EPA per play</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">EPA = EP_after − EP_before</div>
+        <div class="ic-desc">How much a play changed the expected scoring. Positive = good, negative = bad.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">Injury impact score</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">Σ(pos_weight × severity)</div>
+        <div class="ic-desc">Sum of position weight × injury severity for every injured player. QB=3.5, Out=1.0.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">Monte Carlo probability</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">SB% = wins / 10,000 × 100</div>
+        <div class="ic-desc">Count how many of 10,000 full playoff simulations each team wins.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">Brier Score</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">Brier = (prob − outcome)²</div>
+        <div class="ic-desc">Measures calibration quality. Lower is better. 0 = perfect, 0.25 = random.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-lbl" style="margin-bottom:4px">Season regression</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);line-height:1.6">R = 1500 + 0.67×(R − 1500)</div>
+        <div class="ic-desc">Applied each offseason to move ratings 33% toward the 1500 mean. Accounts for roster changes.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function calcEPA(){
+  const before = parseFloat(document.getElementById('ep-before').value);
+  const after  = parseFloat(document.getElementById('ep-after').value);
+  document.getElementById('ep-before-val').textContent = before.toFixed(1);
+  document.getElementById('ep-after-val').textContent  = after.toFixed(1);
+  const epa = after - before;
+  const el  = document.getElementById('epa-result');
+  const interp = document.getElementById('epa-interp');
+  el.textContent = (epa >= 0 ? '+' : '') + epa.toFixed(2);
+  if(epa > 2){el.style.color='#3B6D11';interp.textContent='Excellent play — huge gain in expected points'}
+  else if(epa > 0.5){el.style.color='#639922';interp.textContent='Good play — added expected points'}
+  else if(epa > -0.5){el.style.color='#888780';interp.textContent='Neutral play — roughly expected result'}
+  else if(epa > -2){el.style.color='#BA7517';interp.textContent='Bad play — lost expected points'}
+  else{el.style.color='#A32D2D';interp.textContent='Terrible play — major loss of expected points (likely turnover or big sack)'}
+}
+
+function calcELO(){
+  const home = parseFloat(document.getElementById('elo-home').value)||1500;
+  const away = parseFloat(document.getElementById('elo-away').value)||1500;
+  const gap  = home - away + 65;
+  const pHome= 1/(1+Math.pow(10,-(gap/400)));
+  const pAway= 1-pHome;
+  document.getElementById('elo-gap').textContent = Math.round(gap);
+  document.getElementById('elo-prob-home').textContent = (pHome*100).toFixed(1)+'%';
+  document.getElementById('elo-prob-away').textContent = (pAway*100).toFixed(1)+'%';
+  document.getElementById('elo-prob-home').style.color = pHome>0.5?'#3B6D11':'#A32D2D';
+  document.getElementById('elo-prob-away').style.color = pAway>0.5?'#3B6D11':'#A32D2D';
+}
+</script>

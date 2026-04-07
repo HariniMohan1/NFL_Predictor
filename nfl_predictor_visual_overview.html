@@ -1,0 +1,350 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.page{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.hero{text-align:center;padding:2rem 1rem 1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:2rem}
+.hero-badge{display:inline-block;font-size:11px;font-weight:500;letter-spacing:.06em;padding:4px 12px;border-radius:20px;background:#E1F5EE;color:#085041;margin-bottom:1rem;text-transform:uppercase}
+.hero h1{font-size:28px;font-weight:500;color:var(--color-text-primary);line-height:1.3;margin-bottom:.5rem}
+.hero p{font-size:14px;color:var(--color-text-secondary);max-width:560px;margin:0 auto .25rem;line-height:1.6}
+.hero-result{display:inline-flex;align-items:center;gap:8px;margin-top:1rem;padding:8px 16px;border-radius:var(--border-radius-md);background:#EAF3DE;border:0.5px solid #C0DD97}
+.hero-result span{font-size:13px;font-weight:500;color:#3B6D11}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:2rem}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem;text-align:center}
+.stat-val{font-size:26px;font-weight:500;line-height:1;margin-bottom:4px}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em}
+.section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-tertiary);margin-bottom:.75rem}
+.section-gap{margin-bottom:2rem}
+
+.pipeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:2rem}
+.pipe-card{border-radius:var(--border-radius-md);padding:.875rem .75rem;border:0.5px solid transparent;position:relative}
+.pipe-num{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem}
+.pipe-name{font-size:13px;font-weight:500;line-height:1.3;margin-bottom:.4rem}
+.pipe-desc{font-size:11px;line-height:1.5;opacity:.85}
+.pipe-1{background:#E1F5EE;border-color:#9FE1CB}.pipe-1 .pipe-num,.pipe-1 .pipe-name{color:#085041}.pipe-1 .pipe-desc{color:#0F6E56}
+.pipe-2{background:#E6F1FB;border-color:#B5D4F4}.pipe-2 .pipe-num,.pipe-2 .pipe-name{color:#0C447C}.pipe-2 .pipe-desc{color:#185FA5}
+.pipe-3{background:#EEEDFE;border-color:#CECBF6}.pipe-3 .pipe-num,.pipe-3 .pipe-name{color:#26215C}.pipe-3 .pipe-desc{color:#3C3489}
+.pipe-4{background:#FAEEDA;border-color:#FAC775}.pipe-4 .pipe-num,.pipe-4 .pipe-name{color:#412402}.pipe-4 .pipe-desc{color:#633806}
+.pipe-5{background:#FCEBEB;border-color:#F7C1C1}.pipe-5 .pipe-num,.pipe-5 .pipe-name{color:#501313}.pipe-5 .pipe-desc{color:#791F1F}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.125rem 1.25rem}
+.card h3{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:.75rem}
+
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.feat-item{padding:6px 8px;border-radius:var(--border-radius-md);border-left:3px solid transparent}
+.feat-item .fname{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:1px}
+.feat-item .fcat{font-size:10px;color:var(--color-text-secondary)}
+.f-elo{background:#E1F5EE;border-color:#1D9E75}
+.f-epa{background:#E6F1FB;border-color:#378ADD}
+.f-eff{background:#FAEEDA;border-color:#EF9F27}
+.f-inj{background:#FCEBEB;border-color:#E24B4A}
+.f-dft{background:#EEEDFE;border-color:#7F77DD}
+
+.metrics-table{width:100%;border-collapse:collapse;font-size:13px}
+.metrics-table th{text-align:left;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-tertiary);padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.metrics-table td{padding:8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.metrics-table td:first-child{font-weight:500;color:var(--color-text-primary)}
+.val-xgb{color:#3B6D11;font-weight:500}
+.val-elo{color:var(--color-text-tertiary)}
+.badge-ok{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;background:#EAF3DE;color:#27500A;font-weight:500}
+
+.data-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:2rem}
+.data-card{border-radius:var(--border-radius-md);padding:.875rem 1rem}
+.data-card .d-icon{font-size:20px;margin-bottom:.5rem}
+.data-card .d-title{font-size:13px;font-weight:500;margin-bottom:.25rem}
+.data-card .d-stat{font-size:11px;margin-bottom:.5rem}
+.data-card .d-pts{font-size:10px;line-height:1.6}
+.dc-play{background:#E1F5EE;color:#085041}.dc-play .d-stat{color:#1D9E75}
+.dc-inj{background:#FAEEDA;color:#412402}.dc-inj .d-stat{color:#BA7517}
+.dc-dft{background:#EEEDFE;color:#26215C}.dc-dft .d-stat{color:#534AB7}
+
+.app-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:2rem}
+.app-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;background:var(--color-background-primary)}
+.app-icon{width:28px;height:28px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:.5rem}
+.app-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.app-desc{font-size:10px;color:var(--color-text-secondary);line-height:1.5}
+
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:2rem}
+.why-row{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary)}
+.why-model{font-size:12px;font-weight:500;color:var(--color-text-primary);min-width:110px}
+.why-reason{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.why-x{display:inline-block;width:16px;height:16px;border-radius:50%;background:#FCEBEB;color:#A32D2D;font-size:9px;font-weight:500;text-align:center;line-height:16px;flex-shrink:0;margin-top:1px}
+
+.improve-list{display:flex;flex-direction:column;gap:8px;margin-bottom:2rem}
+.imp-row{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.imp-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;flex-shrink:0;margin-top:2px}
+.imp-high{background:#FCEBEB;color:#791F1F}
+.imp-med{background:#FAEEDA;color:#633806}
+.imp-low{background:#F1EFE8;color:#444441}
+.imp-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.imp-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+
+.shap-chart{margin-top:.5rem}
+.shap-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.shap-label{font-size:10px;color:var(--color-text-secondary);text-align:right;flex-shrink:0;width:140px}
+.shap-bar-wrap{flex:1;height:14px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.shap-bar{height:100%;border-radius:3px;transition:width .6s ease}
+.shap-val{font-size:10px;font-weight:500;flex-shrink:0;width:30px}
+
+.mc-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:.5rem}
+.mc-step{padding:5px 10px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500}
+.mc-arrow{color:var(--color-text-tertiary);font-size:12px;flex-shrink:0}
+.mc-1{background:#E1F5EE;color:#085041}
+.mc-2{background:#E6F1FB;color:#0C447C}
+.mc-3{background:#EEEDFE;color:#26215C}
+.mc-4{background:#FCEBEB;color:#501313}
+.mc-result{background:#EAF3DE;color:#27500A;padding:5px 10px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;border:0.5px solid #C0DD97}
+
+.footer-bar{border-top:0.5px solid var(--color-border-tertiary);padding-top:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;gap:8px}
+.footer-cmd{font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);background:var(--color-background-secondary);padding:4px 10px;border-radius:var(--border-radius-md)}
+.footer-note{font-size:11px;color:var(--color-text-tertiary)}
+
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .pipeline{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .data-grid{grid-template-columns:1fr}
+  .app-grid{grid-template-columns:repeat(2,1fr)}
+  .why-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+}
+</style>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">NFL Super Bowl Predictor</div>
+    <h1>Predicting the Super Bowl champion<br>using machine learning</h1>
+    <p>A full-stack ML system combining ELO ratings, play-by-play EPA, injury reports, draft data, XGBoost, SHAP explainability, and 10,000-run Monte Carlo simulation to predict Super Bowl probabilities for all 32 NFL teams.</p>
+    <div class="hero-result">
+      <span>Seattle Seahawks ranked #1 at 19.7% — They won Super Bowl LX &nbsp;✓</span>
+    </div>
+  </div>
+
+  <!-- KEY STATS -->
+  <div class="section-gap">
+    <div class="section-label">At a glance</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val" style="color:#1D9E75">68.1%</div><div class="stat-lbl">Game accuracy</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:#378ADD">0.735</div><div class="stat-lbl">AUC score</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:#7F77DD">10,000</div><div class="stat-lbl">MC simulations</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:#EF9F27">32</div><div class="stat-lbl">Features built</div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val" style="font-size:20px;color:var(--color-text-primary)">373,381</div><div class="stat-lbl">Plays analysed</div></div>
+      <div class="stat-card"><div class="stat-val" style="font-size:20px;color:var(--color-text-primary)">60,788</div><div class="stat-lbl">Injury records</div></div>
+      <div class="stat-card"><div class="stat-val" style="font-size:20px;color:var(--color-text-primary)">2,227</div><div class="stat-lbl">Training games</div></div>
+      <div class="stat-card"><div class="stat-val" style="font-size:20px;color:var(--color-text-primary)">34/34</div><div class="stat-lbl">Tests passing</div></div>
+    </div>
+  </div>
+
+  <!-- 5-LAYER PIPELINE -->
+  <div class="section-gap">
+    <div class="section-label">5-layer model stack</div>
+    <div class="pipeline">
+      <div class="pipe-card pipe-1">
+        <div class="pipe-num">Layer 1</div>
+        <div class="pipe-name">ELO Rating System</div>
+        <div class="pipe-desc">Multi-year team quality score that survives the offseason. Solves Week-1 cold-start.</div>
+      </div>
+      <div class="pipe-card pipe-2">
+        <div class="pipe-num">Layer 2</div>
+        <div class="pipe-name">Feature Engineering</div>
+        <div class="pipe-desc">32 features from EPA, injuries, draft & turnovers. Strict shift(1) anti-leakage.</div>
+      </div>
+      <div class="pipe-card pipe-3">
+        <div class="pipe-num">Layer 3</div>
+        <div class="pipe-name">XGBoost Classifier</div>
+        <div class="pipe-desc">Calibrated win probability. TimeSeriesSplit CV. Isotonic calibration.</div>
+      </div>
+      <div class="pipe-card pipe-4">
+        <div class="pipe-num">Layer 4</div>
+        <div class="pipe-name">SHAP Explainability</div>
+        <div class="pipe-desc">Every prediction fully explained. No black box — users see exactly why.</div>
+      </div>
+      <div class="pipe-card pipe-5">
+        <div class="pipe-num">Layer 5</div>
+        <div class="pipe-name">Monte Carlo</div>
+        <div class="pipe-desc">10,000 full playoff simulations → Super Bowl % per team.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA + FEATURES -->
+  <div class="section-gap">
+    <div class="section-label">Data sources</div>
+    <div class="data-grid">
+      <div class="data-card dc-play">
+        <div class="d-icon">🏈</div>
+        <div class="d-title">Game Play-by-Play</div>
+        <div class="d-stat">373,381 plays · 11 seasons</div>
+        <div class="d-pts">EPA per play · Pass/rush breakdown · Turnover margin · Sack rate · 3rd down rate · Quarter-by-quarter scoring</div>
+      </div>
+      <div class="data-card dc-inj">
+        <div class="d-icon">🏥</div>
+        <div class="d-title">Injury Reports</div>
+        <div class="d-stat">60,788 records · weekly</div>
+        <div class="d-pts">Position-weighted impact · QB flag (3.5× weight) · Skill position count · Severity: Out=1.0, Doubtful=0.75, Q=0.40</div>
+      </div>
+      <div class="data-card dc-dft">
+        <div class="d-icon">📋</div>
+        <div class="d-title">Draft & Schedule</div>
+        <div class="d-stat">2,821 picks · 3,028 games</div>
+        <div class="d-pts">Talent score by pick · Draft class quality · Year-over-year EPA delta · Home/away context</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES + METRICS SIDE BY SIDE -->
+  <div class="two-col section-gap">
+    <div class="card">
+      <h3>32 engineered features</h3>
+      <div class="feat-grid">
+        <div class="feat-item f-elo"><div class="fname">elo_diff</div><div class="fcat">ELO</div></div>
+        <div class="feat-item f-elo"><div class="fname">home_win_prob_elo</div><div class="fcat">ELO</div></div>
+        <div class="feat-item f-epa"><div class="fname">roll_off_epa</div><div class="fcat">Rolling EPA</div></div>
+        <div class="feat-item f-epa"><div class="fname">roll_def_epa_allowed</div><div class="fcat">Rolling EPA</div></div>
+        <div class="feat-item f-epa"><div class="fname">roll_pass_epa</div><div class="fcat">Rolling EPA</div></div>
+        <div class="feat-item f-epa"><div class="fname">roll_rush_epa</div><div class="fcat">Rolling EPA</div></div>
+        <div class="feat-item f-eff"><div class="fname">roll_turnover_margin</div><div class="fcat">Efficiency</div></div>
+        <div class="feat-item f-eff"><div class="fname">roll_sack_rate</div><div class="fcat">Efficiency</div></div>
+        <div class="feat-item f-eff"><div class="fname">roll_third_down_rate</div><div class="fcat">Efficiency</div></div>
+        <div class="feat-item f-inj"><div class="fname">injury_impact</div><div class="fcat">Injuries</div></div>
+        <div class="feat-item f-inj"><div class="fname">qb_injured</div><div class="fcat">Injuries</div></div>
+        <div class="feat-item f-inj"><div class="fname">skill_injuries</div><div class="fcat">Injuries</div></div>
+        <div class="feat-item f-dft"><div class="fname">top_pick_value</div><div class="fcat">Draft</div></div>
+        <div class="feat-item f-dft"><div class="fname">draft_epa_delta</div><div class="fcat">Draft</div></div>
+        <div class="feat-item f-epa"><div class="fname">+ 18 differentials</div><div class="fcat">Home − Away</div></div>
+        <div class="feat-item f-eff"><div class="fname">diff_* cols</div><div class="fcat">Home − Away</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Model performance</h3>
+      <table class="metrics-table">
+        <thead>
+          <tr><th>Metric</th><th>XGBoost</th><th>ELO</th><th>Target</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Accuracy</td><td class="val-xgb">68.1%</td><td class="val-elo">63.0%</td><td>≥65%</td><td><span class="badge-ok">Met</span></td></tr>
+          <tr><td>Brier Score</td><td class="val-xgb">0.2127</td><td class="val-elo">0.228</td><td>≤0.22</td><td><span class="badge-ok">Met</span></td></tr>
+          <tr><td>AUC (2024)</td><td class="val-xgb">0.735</td><td class="val-elo">0.650</td><td>≥0.67</td><td><span class="badge-ok">Met</span></td></tr>
+          <tr><td>AUC (2025)</td><td class="val-xgb">0.696</td><td class="val-elo">—</td><td>≥0.67</td><td><span class="badge-ok">Met</span></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem">
+        <div class="shap-chart">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px">SHAP importance (mean |SHAP|)</div>
+          <div class="shap-row"><div class="shap-label">ELO Win Probability</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:100%;background:#1D9E75"></div></div><div class="shap-val" style="color:#1D9E75">0.233</div></div>
+          <div class="shap-row"><div class="shap-label">ELO Rating Diff</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:87%;background:#1D9E75"></div></div><div class="shap-val" style="color:#1D9E75">0.202</div></div>
+          <div class="shap-row"><div class="shap-label">Draft EPA Delta</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:50%;background:#378ADD"></div></div><div class="shap-val" style="color:#378ADD">0.117</div></div>
+          <div class="shap-row"><div class="shap-label">Rolling Off. EPA Diff</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:38%;background:#378ADD"></div></div><div class="shap-val" style="color:#378ADD">0.089</div></div>
+          <div class="shap-row"><div class="shap-label">Turnover Margin</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:30%;background:#EF9F27"></div></div><div class="shap-val" style="color:#BA7517">0.071</div></div>
+          <div class="shap-row"><div class="shap-label">Injury Impact</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:25%;background:#E24B4A"></div></div><div class="shap-val" style="color:#A32D2D">0.058</div></div>
+          <div class="shap-row"><div class="shap-label">QB Injury Flag</div><div class="shap-bar-wrap"><div class="shap-bar" style="width:19%;background:#E24B4A"></div></div><div class="shap-val" style="color:#A32D2D">0.044</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTE CARLO FLOW -->
+  <div class="card section-gap">
+    <h3>How Monte Carlo simulation works</h3>
+    <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:.75rem">Each of the 10,000 runs follows the same four steps</p>
+    <div class="mc-flow">
+      <div class="mc-step mc-1">1 · Flip weighted coin<br><span style="font-size:10px;font-weight:400">ELO 40% + EPA 40% + TO 20%</span></div>
+      <div class="mc-arrow">→</div>
+      <div class="mc-step mc-2">2 · Seed bracket<br><span style="font-size:10px;font-weight:400">7-team playoff per conf.</span></div>
+      <div class="mc-arrow">→</div>
+      <div class="mc-step mc-3">3 · Simulate playoffs<br><span style="font-size:10px;font-weight:400">WC → Div → Conf → SB</span></div>
+      <div class="mc-arrow">→</div>
+      <div class="mc-step mc-4">4 · Record winner<br><span style="font-size:10px;font-weight:400">Repeat × 10,000</span></div>
+      <div class="mc-arrow">→</div>
+      <div class="mc-result">SB% = wins ÷ 10,000<br><span style="font-size:10px;font-weight:400">SEA #1 at 19.7% ✓</span></div>
+    </div>
+  </div>
+
+  <!-- WHY NOT OTHERS -->
+  <div class="section-gap">
+    <div class="section-label">Why XGBoost — not these alternatives</div>
+    <div class="why-grid">
+      <div class="why-row"><span class="why-x">✕</span><div><div class="why-model">Logistic Regression</div><div class="why-reason">Can't capture non-linear interactions. ELO × injury matters — logistic misses it entirely.</div></div></div>
+      <div class="why-row"><span class="why-x">✕</span><div><div class="why-model">Neural Networks</div><div class="why-reason">Needs 50K+ samples. We have 2,227 games. Would overfit and produce no SHAP output.</div></div></div>
+      <div class="why-row"><span class="why-x">✕</span><div><div class="why-model">Random Forest</div><div class="why-reason">Bagging not boosting — slower convergence. XGBoost consistently beats it on tabular data.</div></div></div>
+      <div class="why-row"><span class="why-x">✕</span><div><div class="why-model">SVM</div><div class="why-reason">No calibrated probabilities natively. Brier scoring requires honest probabilities.</div></div></div>
+      <div class="why-row"><span class="why-x">✕</span><div><div class="why-model">Naive Bayes</div><div class="why-reason">Assumes all features independent. EPA and ELO are clearly correlated.</div></div></div>
+      <div class="why-row"><span class="why-x">✕</span><div><div class="why-model">Analytical calc.</div><div class="why-reason">32 teams × 18 weeks × playoffs = billions of paths. Mathematically intractable.</div></div></div>
+    </div>
+  </div>
+
+  <!-- THE APP -->
+  <div class="section-gap">
+    <div class="section-label">Streamlit app — 5 pages</div>
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="app-icon" style="background:#E1F5EE;color:#085041">📈</div>
+        <div class="app-name">Dashboard</div>
+        <div class="app-desc">32 teams ranked by SB probability. Bar chart, donut, sortable table, radar comparison.</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon" style="background:#FAEEDA;color:#412402">🎯</div>
+        <div class="app-name">Game Predictor</div>
+        <div class="app-desc">Any matchup → calibrated win % + SHAP waterfall showing exactly why.</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon" style="background:#EEEDFE;color:#26215C">📐</div>
+        <div class="app-name">Quarter Analysis</div>
+        <div class="app-desc">Q1-Q4 EPA per game. Team profiles. Decisive quarter. Expected vs upset.</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon" style="background:#E6F1FB;color:#0C447C">🏈</div>
+        <div class="app-name">Team Deep Dive</div>
+        <div class="app-desc">Rolling EPA, injury timeline with W/L overlay, draft class quality by season.</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon" style="background:#FCEBEB;color:#501313">🏆</div>
+        <div class="app-name">Leaderboard</div>
+        <div class="app-desc">Register, pick your SB champion, track Brier score vs the community.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPROVEMENTS -->
+  <div class="section-gap">
+    <div class="section-label">What we can improve next</div>
+    <div class="improve-list">
+      <div class="imp-row">
+        <div class="imp-badge imp-high">High</div>
+        <div><div class="imp-title">Live season data feed</div><div class="imp-desc">Connect nflverse weekly live feed — auto-update every Tuesday during the 2026 season.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-badge imp-high">High</div>
+        <div><div class="imp-title">Player-level features</div><div class="imp-desc">Add QB passer rating, WR yards after catch, OL pass block win rate from already-loaded player_stats.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-badge imp-med">Medium</div>
+        <div><div class="imp-title">Weather & venue data</div><div class="imp-desc">Temperature, wind speed, dome vs outdoor — cold weather reduces passing EPA ~15%.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-badge imp-med">Medium</div>
+        <div><div class="imp-title">Ensemble model</div><div class="imp-desc">Blend XGBoost + LightGBM + CatBoost — typically adds 1-2% accuracy with no new data.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-badge imp-low">Low</div>
+        <div><div class="imp-title">Shared cloud database</div><div class="imp-desc">Swap get_conn() to PostgreSQL (Supabase free). One line change → global shared leaderboard.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-bar">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div class="footer-cmd">python train.py</div>
+      <div class="footer-cmd">streamlit run app/main.py</div>
+      <div class="footer-cmd">pytest tests/ -v</div>
+    </div>
+    <div class="footer-note">18 files · 8,000+ lines · 11 seasons of NFL data</div>
+  </div>
+
+</div>
